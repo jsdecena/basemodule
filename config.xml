@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
-            <name>basemodule</name>
-            <displayName><![CDATA[Base Module]]></displayName>
+            <name>acommerce</name>
+            <displayName><![CDATA[Acommerce Module]]></displayName>
             <version><![CDATA[0.1]]></version>
-            <description><![CDATA[Base configuration module]]></description>
+            <description><![CDATA[Acommerce configuration module]]></description>
             <author><![CDATA[Jeff Simons Decena]]></author>
-            <tab><![CDATA[administration]]></tab>
+            <tab><![CDATA[front_office_features]]></tab>
 	<confirmUninstall>Are you sure you want to uninstall?</confirmUninstall>
-            <is_configurable>0</is_configurable>
+            <is_configurable>1</is_configurable>
             <need_instance>0</need_instance>
 	<limited_countries></limited_countries>
         </module>

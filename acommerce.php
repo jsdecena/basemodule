@@ -8,13 +8,13 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Basemodule extends PaymentModule
+class Acommerce extends PaymentModule
 {
 
 	public function __construct()
 	{
-	$this->name = 'basemodule';
-	$this->tab = 'payments_gateways';
+	$this->name = 'acommerce';
+	$this->tab = 'front_office_features';
 	$this->version = '0.1';
 	$this->author = 'Jeff Simons Decena';
 	$this->need_instance = 0;
@@ -22,44 +22,44 @@ class Basemodule extends PaymentModule
 
 	parent::__construct();
 
-	$this->displayName = $this->l('Basemodule Module');
-	$this->description = $this->l('Basemodule configuration module');
+	$this->displayName = $this->l('Acommerce Module');
+	$this->description = $this->l('Acommerce configuration module');
 
 	$this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 
-	if (!Configuration::get('BASEMODULE'))      
+	if (!Configuration::get('ACOMMERCE'))
 	  $this->warning = $this->l('No name provided');
 	}
 
 	public function install()
 	{
 	  return parent::install() &&
-	  	Configuration::updateValue('BASEMODULE', 'BASEMODULE MODULE') &&
+	  	Configuration::updateValue('ACOMMERCE', 'ACOMMERCE MODULE') &&
+	  	Configuration::updateValue('REMOTEDIR', '/home') &&
 	  	$this->registerHook('payment');
 	}	
 
 	public function uninstall()
 	{
 	  return parent::uninstall() && 
-	  	Configuration::deleteByName('BASEMODULE');
+	  	Configuration::deleteByName('ACOMMERCE');
 	}
 
 	public function getContent()
-	{
-	    $output = null;
-	 
+	{	 
+		$output = null;
+
 	    if (Tools::isSubmit('submit'.$this->name))
 	    {
-	        $my_module_name = strval(Tools::getValue('BASEMODULE'));
-	        if (!$my_module_name  || empty($my_module_name) || !Validate::isGenericName($my_module_name))
-	            $output .= $this->displayError( $this->l('Invalid Configuration value') );
-	        else
-	        {
-	            Configuration::updateValue('BASEMODULE', $my_module_name);
-	            $output .= $this->displayConfirmation($this->l('Settings updated'));
-	        }
+	    	Configuration::updateValue('ACOMMERCE', 'ACOMMERCE MODULE');
+            Configuration::updateValue('SECUREHOST', Tools::getValue('SECUREHOST'));
+            Configuration::updateValue('SECUREPORT', Tools::getValue('SECUREPORT'));
+            Configuration::updateValue('USERNAME', Tools::getValue('USERNAME'));
+            Configuration::updateValue('PASSWORD', Tools::getValue('PASSWORD'));
+            Configuration::updateValue('REMOTEDIR', Tools::getValue('REMOTEDIR'));
+            $output .= $this->displayConfirmation($this->l('Settings updated'));
 	    }
-	    return $output.$this->displayForm();
+	    return $this->displayForm();
 	}
 
 	public function displayForm()
@@ -75,11 +75,39 @@ class Basemodule extends PaymentModule
 	        'input' => array(
 	            array(
 	                'type' => 'text',
-	                'label' => $this->l('Configuration value'),
-	                'name' => 'BASEMODULE',
+	                'label' => $this->l('Host'),
+	                'name' => 'SECUREHOST',
 	                'size' => 20,
 	                'required' => true
-	            )
+	            ),
+	            array(
+	                'type' => 'text',
+	                'label' => $this->l('Port'),
+	                'name' => 'SECUREPORT',
+	                'size' => 20,
+	                'required' => true
+	            ),	            
+	            array(
+	                'type' => 'text',
+	                'label' => $this->l('Username'),
+	                'name' => 'USERNAME',
+	                'size' => 20,
+	                'required' => true
+	            ),
+	            array(
+	                'type' => 'text',
+	                'label' => $this->l('Password'),
+	                'name' => 'PASSWORD',
+	                'size' => 20,
+	                'required' => true
+	            ),
+	            array(
+	                'type' => 'text',
+	                'label' => $this->l('Remote Directory Path'),
+	                'name' => 'REMOTEDIR',
+	                'size' => 20,
+	                'required' => true
+	            )	            
 	        ),
 	        'submit' => array(
 	            'title' => $this->l('Save'),
@@ -118,8 +146,12 @@ class Basemodule extends PaymentModule
 	    );
 	     
 	    // Load current value
-	    $helper->fields_value['BASEMODULE'] = Configuration::get('BASEMODULE');
+	    $helper->fields_value['SECUREHOST'] = Configuration::get('SECUREHOST');
+	    $helper->fields_value['SECUREPORT'] = Configuration::get('SECUREPORT');
+	    $helper->fields_value['USERNAME'] 	= Configuration::get('USERNAME');
+	    $helper->fields_value['PASSWORD'] 	= Configuration::get('PASSWORD');
+	    $helper->fields_value['REMOTEDIR'] 	= Configuration::get('REMOTEDIR');
 	     
 	    return $helper->generateForm($fields_form);
-	}		
+	}
 }
